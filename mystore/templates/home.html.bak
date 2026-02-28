@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h2 class="mb-4">Products</h2>
+
+
+<!-- SEARCH FORM -->
+<form method="GET" class="row mb-4">
+
+    <div class="col-md-4">
+        <input 
+            type="text" 
+            name="q" 
+            class="form-control"
+            placeholder="Search products"
+            value="{{ request.GET.q }}"
+        >
+    </div>
+
+    <div class="col-md-4">
+        <select name="category" class="form-control">
+
+            <option value="">All Categories</option>
+
+            {% for cat in categories %}
+            <option 
+                value="{{ cat.name }}"
+                {% if request.GET.category == cat.name %}
+                selected
+                {% endif %}
+            >
+                {{ cat.name }}
+            </option>
+            {% endfor %}
+
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary w-100">
+            Search
+        </button>
+    </div>
+
+</form>
+
+
+
+<!-- PRODUCTS GRID -->
+<div class="row">
+
+{% for product in products %}
+
+<div class="col-md-3">
+
+<div class="card m-2 shadow-sm">
+
+
+    <!-- Wishlist Button -->
+    <div class="text-end p-2">
+        <a href="/add-wishlist/{{ product.id }}" 
+           class="btn btn-outline-danger btn-sm">
+            ❤️ Wishlist
+        </a>
+    </div>
+
+
+
+    <!-- Product Image -->
+    {% if product.image %}
+    <img src="{{ product.image.url }}" 
+         height="200" 
+         class="card-img-top">
+    {% else %}
+    <img src="/static/no-image.png" 
+         height="200" 
+         class="card-img-top">
+    {% endif %}
+
+
+
+    <!-- Product Details -->
+    <div class="card-body text-center">
+
+        <h5>{{ product.name }}</h5>
+
+        <p class="text-success fw-bold">
+            ₹{{ product.price }}
+        </p>
+
+
+        <!-- Buttons -->
+        <div class="d-grid gap-2 mb-2">
+
+            <a href="/product/{{ product.id }}" 
+               class="btn btn-primary">
+                View
+            </a>
+
+            <a href="/cart/{{ product.id }}" 
+               class="btn btn-success">
+                Add to Cart
+            </a>
+
+            <a href="/order/{{ product.id }}" 
+               class="btn btn-warning">
+                Buy Now
+            </a>
+
+        </div>
+
+
+
+        <!-- Rating Form -->
+        <form method="POST" action="/rate/{{ product.id }}/">
+
+            {% csrf_token %}
+
+            <div class="mb-2">
+                <input 
+                    type="number" 
+                    name="stars" 
+                    min="1" 
+                    max="5"
+                    class="form-control"
+                    placeholder="Stars (1–5)"
+                    required
+                >
+            </div>
+
+            <div class="mb-2">
+                <input 
+                    type="text" 
+                    name="review"
+                    class="form-control"
+                    placeholder="Write review"
+                    required
+                >
+            </div>
+
+            <button class="btn btn-info w-100">
+                Submit Rating
+            </button>
+
+        </form>
+
+
+    </div>
+
+</div>
+
+</div>
+
+{% empty %}
+
+<div class="col-12">
+    <h4 class="text-danger text-center">
+        No products found
+    </h4>
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

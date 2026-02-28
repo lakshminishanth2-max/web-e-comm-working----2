@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Cart</h2>
+
+{% for item in cart %}
+<p>{{ item.name }} - ₹{{ item.price }}</p>
+{% endfor %}
+
+<a href="/checkout" class="btn btn-primary">
+Checkout
+</a>
+
+{% endblock %}
