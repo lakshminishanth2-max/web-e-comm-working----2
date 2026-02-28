@@ -81,7 +81,7 @@ def add_wishlist(request, product_id):
 
     return redirect("home")
 
-
+#heello
 @login_required
 def wishlist(request):
     items = Wishlist.objects.filter(user=request.user)
